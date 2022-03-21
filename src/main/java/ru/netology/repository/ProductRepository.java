@@ -7,12 +7,17 @@ public class ProductRepository {  //Для этого репозиторий б�
     private Product[] items = new Product[0];
 
     public void save(Product item) {
-        int length = items.length + 1;
-        Product[] tmp = new Product[length];
-        System.arraycopy(items, 0, tmp, 0, items.length);
-        int lastIndex = tmp.length - 1;
-        tmp[lastIndex] = item;
-        items = tmp;
+        String name = item.getName();
+        Product [] result = ProductManager.searchBy(item.getName());
+        if (result.length != 0) {
+            throw new ProductIsAlreadySaved("Element with name: " + name + " is already saved");
+        };
+            int length = items.length + 1;
+            Product[] tmp = new Product[length];
+            System.arraycopy(items, 0, tmp, 0, items.length);
+            int lastIndex = tmp.length - 1;
+            tmp[lastIndex] = item;
+            items = tmp;
     }
 
     public Product[] findAll() {
@@ -20,6 +25,9 @@ public class ProductRepository {  //Для этого репозиторий б�
     }
 
     public void removeById(String id) {
+        if (id == null) {
+            throw new ProductIsAlreadyDeleted("Element with id: " + id + " is not found");
+        }
         int length = items.length - 1;
         Product[] tmp = new Product[length];
         int index = 0;

@@ -7,7 +7,7 @@ import ru.netology.repository.ProductIsAlreadyDeleted;
 import ru.netology.repository.ProductRepository;
 
 public class ProductManager {
-    private ProductRepository repository;
+    private static ProductRepository repository;
 
     public ProductManager(ProductRepository repository) { //конструктор
         this.repository = repository;
@@ -18,15 +18,10 @@ public class ProductManager {
     }
 
     public void delete(Product item) {
-        String id = item.getId();
-        if (id == null) {
-            throw new ProductIsAlreadyDeleted("Element with id: " + id + " not found");
-        }
-        searchBy(id);
         repository.removeById(item.getId());
     }
 
-    public Product[] searchBy(String text) {
+    public static Product[] searchBy(String text) {
         Product[] result = new Product[0]; //создаем новую переменную типа массив и говорим, что там 0 ячеек
         for (Product item : repository.findAll()) { //для каждого элемента массива Продакт применяется метод найти все
             if (matches(item, text)) { //при условии, что метод совпадение выполняется, создается новый репо видом Продакт и он на одну ячейку больше
